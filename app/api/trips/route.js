@@ -14,8 +14,13 @@ export async function GET(req) {
 
         await connectToDatabase();
 
-        const trips = await Trip.find({ userId: session.user.id })
-            .sort({ startDate: 1 }); // Sort by upcoming
+        // Find trips where user is OWNER OR COLLABORATOR
+        const trips = await Trip.find({
+            $or: [
+                { userId: session.user.id },
+                { 'collaborators.userId': session.user.id } // Updated for Object structure
+            ]
+        }).sort({ startDate: 1 });
 
         return NextResponse.json({ trips }, { status: 200 });
     } catch (error) {

@@ -32,6 +32,8 @@ const UserSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Trip',
     }],
+    resetPasswordToken: String,
+    resetPasswordExpire: Date,
 }, {
     timestamps: true,
 });

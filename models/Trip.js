@@ -34,8 +34,15 @@ const TripSchema = new mongoose.Schema({
         default: 'private',
     },
     collaborators: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
+        userId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
+        },
+        role: {
+            type: String,
+            enum: ['planner', 'visitor'],
+            default: 'visitor'
+        }
     }],
     budget: {
         type: Number,
@@ -51,4 +58,10 @@ const TripSchema = new mongoose.Schema({
     timestamps: true,
 });
 
-export default mongoose.models.Trip || mongoose.model('Trip', TripSchema);
+// Prevent Mongoose Recompilation Error in Next.js
+// But allow schema updates in dev mode
+if (mongoose.models.Trip) {
+    delete mongoose.models.Trip;
+}
+
+export default mongoose.model('Trip', TripSchema);

@@ -1,12 +1,7 @@
-import { Inter, Poppins } from 'next/font/google';
+import { Outfit } from 'next/font/google';
 import './globals.css';
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
-const poppins = Poppins({
-  weight: ['400', '500', '600', '700'],
-  subsets: ['latin'],
-  variable: '--font-heading'
-});
+const outfit = Outfit({ subsets: ['latin'] });
 
 export const metadata = {
   title: 'GlobeTrotter - Empowering Personalized Travel Planning',
@@ -15,13 +10,16 @@ export const metadata = {
 };
 
 import Providers from '@/components/Providers';
+import { ToastProvider } from '@/components/Toast';
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <body className={`${inter.variable} ${poppins.variable}`}>
+    <html lang="en" data-theme="dark">
+      <body className={outfit.className}>
         <Providers>
-          {children}
+          <ToastProvider>
+            {children}
+          </ToastProvider>
         </Providers>
       </body>
     </html>
