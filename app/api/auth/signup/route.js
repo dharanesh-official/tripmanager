@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import connectToDatabase from '@/lib/db';
 import User from '@/models/User';
+import OTP from '@/models/OTP';
+import { sendEmail } from '@/lib/email';
 
 export async function POST(req) {
     try {
@@ -29,16 +31,31 @@ export async function POST(req) {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        // Create user
-        const user = await User.create({
-            name,
-            email,
-            password: hashedPassword,
+        // Generate OTP
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+        // Store OTP and temp data (upsert to handle retries)
+        await OTP.findOneAndUpdate(
+            { email },
+            {
+                email,
+                otp,
+                tempUserData: { name, password: hashedPassword },
+                createdAt: Date.now() // Reset expiry
+            },
+            { upsert: true, new: true }
+        );
+
+        // Send Email
+        await sendEmail({
+            to: email,
+            subject: 'Verify your GlobeTrotter Account',
+            html: `<p>Your verification code is: <strong>${otp}</strong></p><p>This code expires in 5 minutes.</p>`
         });
 
         return NextResponse.json(
-            { message: 'User created successfully', userId: user._id },
-            { status: 201 }
+            { message: 'OTP sent to email', requireOtp: true },
+            { status: 200 }
         );
     } catch (error) {
         console.error('Signup error DETAILED:', error);

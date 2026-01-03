@@ -23,12 +23,15 @@ export async function DELETE(req, { params }) {
         const isOwner = trip.userId._id.toString() === session.user.id;
         const isSelf = memberId === session.user.id; // Check if the user is removing themselves (Leaving)
 
+        // Check if current user is a planner
+        const isPlanner = trip.collaborators.some(c => c.userId.toString() === session.user.id && c.role === 'planner');
+
         // Permission Check:
         // 1. User can leave (isSelf)
         // 2. Owner can kick anyone (except self, handled later)
-        // Note: Planners CANNOT kick others, only Owner can.
-        if (!isSelf && !isOwner) {
-            return NextResponse.json({ error: 'Permission denied. Only the owner can remove members.' }, { status: 403 });
+        // 3. Planner can kick members
+        if (!isSelf && !isOwner && !isPlanner) {
+            return NextResponse.json({ error: 'Permission denied. Only owners and planners can remove members.' }, { status: 403 });
         }
 
         // Find the member to be removed

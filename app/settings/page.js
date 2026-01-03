@@ -116,11 +116,20 @@ export default function Settings() {
         alert('Profile updated successfully!');
     };
 
-    const handleDeleteAccount = () => {
-        if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
-            // API call to delete
-            alert('Account deleted.');
-            signOut();
+    const handleDeleteAccount = async () => {
+        if (confirm('Are you sure you want to delete your account? This action cannot be undone. All your trips will be deleted.')) {
+            try {
+                const res = await fetch('/api/auth/delete', { method: 'DELETE' });
+                if (res.ok) {
+                    alert('Account deleted successfully.');
+                    signOut({ callbackUrl: '/' }); // Redirect to home/login after delete
+                } else {
+                    alert('Failed to delete account.');
+                }
+            } catch (error) {
+                console.error(error);
+                alert('An error occurred.');
+            }
         }
     };
 

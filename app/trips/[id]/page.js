@@ -1212,7 +1212,7 @@ export default function TripDetails() {
                     collaborators={trip.collaborators}
                     ownerEmail={trip.userId?.email || 'Trip Owner'}
                     onKick={handleKickMember}
-                    canKick={trip?.userId?._id === session?.user?.id}
+                    canKick={trip?.userId?._id === session?.user?.id || isPlanner}
                     currentUserId={session?.user?.id}
                 />
                 <BudgetEditModal

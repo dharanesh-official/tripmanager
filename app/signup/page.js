@@ -12,6 +12,8 @@ export default function Signup() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [showPassword, setShowPassword] = useState(false);
+    const [step, setStep] = useState(1);
+    const [otp, setOtp] = useState('');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -19,20 +21,31 @@ export default function Signup() {
         setError('');
 
         try {
-            const res = await fetch('/api/auth/signup', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData),
-            });
+            if (step === 1) {
+                // Request OTP
+                const res = await fetch('/api/auth/signup', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData),
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.message || 'Something went wrong');
 
-            const data = await res.json();
+                // Move to OTP step
+                setStep(2);
+            } else {
+                // Verify OTP
+                const res = await fetch('/api/auth/verify-otp', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: formData.email, otp }),
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.message || 'Invalid OTP');
 
-            if (!res.ok) {
-                throw new Error(data.message || 'Something went wrong');
+                // Redirect on success
+                router.push('/login?registered=true');
             }
-
-            // Redirect to login after successful signup
-            router.push('/login?registered=true');
         } catch (err) {
             setError(err.message);
         } finally {
@@ -74,57 +87,81 @@ export default function Signup() {
                 )}
 
                 <form onSubmit={handleSubmit}>
-                    <div style={{ marginBottom: '20px' }}>
-                        <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: 'var(--text-main)' }}>Full Name</label>
-                        <input
-                            type="text"
-                            className="input-field"
-                            placeholder="e.g. John Doe"
-                            value={formData.name}
-                            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                            required
-                        />
-                    </div>
+                    {step === 1 ? (
+                        <>
+                            <div style={{ marginBottom: '20px' }}>
+                                <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: 'var(--text-main)' }}>Full Name</label>
+                                <input
+                                    type="text"
+                                    className="input-field"
+                                    placeholder="e.g. John Doe"
+                                    value={formData.name}
+                                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                    required
+                                />
+                            </div>
 
-                    <div style={{ marginBottom: '20px' }}>
-                        <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: 'var(--text-main)' }}>Email Address</label>
-                        <div style={{ position: 'relative' }}>
-                            <Mail size={18} style={{ position: 'absolute', left: '16px', top: '16px', color: 'var(--text-secondary)' }} />
+                            <div style={{ marginBottom: '20px' }}>
+                                <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: 'var(--text-main)' }}>Email Address</label>
+                                <div style={{ position: 'relative' }}>
+                                    <Mail size={18} style={{ position: 'absolute', left: '16px', top: '16px', color: 'var(--text-secondary)' }} />
+                                    <input
+                                        type="email"
+                                        className="input-field"
+                                        style={{ paddingLeft: '48px' }}
+                                        placeholder="john@example.com"
+                                        value={formData.email}
+                                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                        required
+                                    />
+                                </div>
+                            </div>
+
+                            <div style={{ marginBottom: '32px' }}>
+                                <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: 'var(--text-main)' }}>Password</label>
+                                <div style={{ position: 'relative' }}>
+                                    <Lock size={18} style={{ position: 'absolute', left: '16px', top: '16px', color: 'var(--text-secondary)' }} />
+                                    <input
+                                        type={showPassword ? "text" : "password"}
+                                        className="input-field"
+                                        style={{ paddingLeft: '48px' }}
+                                        placeholder="••••••••"
+                                        value={formData.password}
+                                        onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                                        required
+                                        minLength={6}
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        style={{ position: 'absolute', right: '16px', top: '16px', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-secondary)' }}
+                                    >
+                                        {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                    </button>
+                                </div>
+                            </div>
+                        </>
+                    ) : (
+                        <div style={{ marginBottom: '32px', textAlign: 'center' }}>
+                            <div style={{ background: 'rgba(37, 99, 235, 0.1)', width: '60px', height: '60px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
+                                <Mail size={32} color="var(--primary-color)" />
+                            </div>
+                            <h3 style={{ marginBottom: '8px' }}>Verify your Email</h3>
+                            <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginBottom: '20px' }}>
+                                We sent a 6-digit code to <strong>{formData.email}</strong>.
+                            </p>
                             <input
-                                type="email"
+                                type="text"
                                 className="input-field"
-                                style={{ paddingLeft: '48px' }}
-                                placeholder="john@example.com"
-                                value={formData.email}
-                                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                style={{ textAlign: 'center', fontSize: '1.5rem', letterSpacing: '8px', padding: '16px' }}
+                                placeholder="000000"
+                                value={otp}
+                                onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
                                 required
+                                maxLength={6}
                             />
                         </div>
-                    </div>
-
-                    <div style={{ marginBottom: '32px' }}>
-                        <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: 'var(--text-main)' }}>Password</label>
-                        <div style={{ position: 'relative' }}>
-                            <Lock size={18} style={{ position: 'absolute', left: '16px', top: '16px', color: 'var(--text-secondary)' }} />
-                            <input
-                                type={showPassword ? "text" : "password"}
-                                className="input-field"
-                                style={{ paddingLeft: '48px' }}
-                                placeholder="••••••••"
-                                value={formData.password}
-                                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                                required
-                                minLength={6}
-                            />
-                            <button
-                                type="button"
-                                onClick={() => setShowPassword(!showPassword)}
-                                style={{ position: 'absolute', right: '16px', top: '16px', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-secondary)' }}
-                            >
-                                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                            </button>
-                        </div>
-                    </div>
+                    )}
 
                     <button
                         type="submit"
@@ -132,7 +169,7 @@ export default function Signup() {
                         style={{ width: '100%', fontSize: '1.1rem', padding: '14px' }}
                         disabled={loading}
                     >
-                        {loading ? 'Creating Account...' : 'Sign Up'}
+                        {loading ? 'Processing...' : (step === 1 ? 'Sign Up' : 'Verify Account')}
                     </button>
                 </form>
 
