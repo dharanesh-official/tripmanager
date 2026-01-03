@@ -700,11 +700,11 @@ export default function TripDetails() {
 
 
                 {/* Hero Header */}
-                <div style={{ position: 'relative', height: '220px' }}>
+                <div className="hero-section" style={{ position: 'relative' }}>
                     <img
                         src={trip.coverImage || "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=1200&q=80"}
                         alt="Trip Cover"
-                        style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(0.6)' }}
+                        style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(0.6)' }}
                     />
                     <div className="container hero-content" style={{ position: 'absolute', bottom: '32px', left: '50%', transform: 'translateX(-50%)', width: '100%', paddingTop: '60px' }}>
                         <motion.h1

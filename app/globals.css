@@ -253,6 +253,20 @@ body {
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
+/* Hero Section Container */
+.hero-section {
+  height: 280px;
+  width: 100%;
+}
+
+@media (max-width: 640px) {
+  .hero-section {
+    height: auto !important;
+    min-height: 280px;
+    padding-bottom: 24px;
+  }
+}
+
 /* Animations */
 @keyframes float {
   0% {
