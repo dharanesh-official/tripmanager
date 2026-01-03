@@ -43,15 +43,19 @@ export default function Sidebar() {
     }
 
     // Styles for items (Links/Buttons)
-    const getItemStyle = (isActive = false) => ({
+    const getItemStyle = (isActive = false) => {
+        // On mobile with menu open, always expand. On desktop, use isExpanded state
+        const shouldExpand = isMobile ? isMobileOpen : isExpanded;
+        
+        return {
         display: 'flex',
         alignItems: 'center',
-        justifyContent: isExpanded ? 'flex-start' : 'center',
-        gap: isExpanded ? '12px' : 0,
-        padding: isExpanded ? '12px 14px' : '0',
-        margin: isExpanded ? '0 12px' : '0 auto',
-        width: isExpanded ? 'calc(100% - 24px)' : '40px', // Slightly smaller for cleaner look
-        height: isExpanded ? 'auto' : '40px',
+        justifyContent: shouldExpand ? 'flex-start' : 'center',
+        gap: shouldExpand ? '12px' : 0,
+        padding: shouldExpand ? '12px 14px' : '0',
+        margin: shouldExpand ? '0 12px' : '0 auto',
+        width: shouldExpand ? 'calc(100% - 24px)' : '40px', // Slightly smaller for cleaner look
+        height: shouldExpand ? 'auto' : '40px',
         borderRadius: '12px',
         textDecoration: 'none',
         color: isActive ? 'white' : 'inherit',
@@ -60,7 +64,8 @@ export default function Sidebar() {
         transition: 'all 0.2s',
         fontWeight: '500',
         whiteSpace: 'nowrap',
-    });
+    };
+    };
 
     return (
         <>
@@ -110,7 +115,7 @@ export default function Sidebar() {
                 onMouseLeave={() => !isMobile && setIsExpanded(false)}
                 className="sidebar"
                 style={{
-                    width: isMobile ? '280px' : isExpanded ? '280px' : '100px',
+                    width: isMobile ? '280px' : (isMobileOpen || isExpanded) ? '280px' : '100px',
                     height: '100vh',
                     background: '#0f172a', // Always dark
                     color: '#94a3b8',
@@ -133,11 +138,11 @@ export default function Sidebar() {
             <div className="sidebar-logo" style={{
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: isExpanded ? 'flex-start' : 'center',
+                justifyContent: (isMobile ? isMobileOpen : isExpanded) ? 'flex-start' : 'center',
                 gap: '12px',
                 marginBottom: '48px',
                 color: 'white',
-                padding: isExpanded ? '0 24px' : '0',
+                padding: (isMobile ? isMobileOpen : isExpanded) ? '0 24px' : '0',
                 width: '100%',
                 boxSizing: 'border-box',
                 overflow: 'hidden'
@@ -148,14 +153,14 @@ export default function Sidebar() {
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     width: '44px', height: '44px', // Match button size exactly
                     flexShrink: 0,
-                    margin: isExpanded ? '0' : '0 auto' // Center when collapsed
+                    margin: (isMobile ? isMobileOpen : isExpanded) ? '0' : '0 auto' // Center when collapsed
                 }}>
                     <span style={{ fontWeight: 'bold', fontSize: '1.2rem' }}>GT</span>
                 </div>
                 <span style={{
                     fontSize: '1.25rem', fontWeight: 'bold', letterSpacing: '-0.5px',
-                    opacity: isExpanded ? 1 : 0, transition: 'opacity 0.2s', whiteSpace: 'nowrap',
-                    width: isExpanded ? 'auto' : 0, overflow: 'hidden'
+                    opacity: (isMobile ? isMobileOpen : isExpanded) ? 1 : 0, transition: 'opacity 0.2s', whiteSpace: 'nowrap',
+                    width: (isMobile ? isMobileOpen : isExpanded) ? 'auto' : 0, overflow: 'hidden'
                 }}>
                     GlobeTrotter
                 </span>
@@ -165,6 +170,7 @@ export default function Sidebar() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', flex: 1, width: '100%' }} className="sidebar-nav">
                 {navItems.map((item) => {
                     const isActive = pathname === item.href || (item.name === 'Dashboard' && pathname.startsWith('/trips'));
+                    const shouldExpand = isMobile ? isMobileOpen : isExpanded;
 
                     return (
                         <Link
@@ -173,7 +179,7 @@ export default function Sidebar() {
                             style={getItemStyle(isActive)}
                         >
                             <item.icon size={22} style={{ minWidth: '22px', flexShrink: 0 }} />
-                            <span className="sidebar-text" style={{ opacity: isExpanded ? 1 : 0, transition: 'opacity 0.2s', overflow: 'hidden' }}>{item.name}</span>
+                            <span className="sidebar-text" style={{ opacity: shouldExpand ? 1 : 0, transition: 'opacity 0.2s', overflow: 'hidden' }}>{item.name}</span>
                         </Link>
                     )
                 })}
@@ -195,7 +201,7 @@ export default function Sidebar() {
                                 <User size={16} color="white" />
                             )}
                         </div>
-                        <div style={{ display: 'flex', flexDirection: 'column', opacity: isExpanded ? 1 : 0, transition: 'opacity 0.2s', whiteSpace: 'nowrap', overflow: 'hidden', width: isExpanded ? 'auto' : 0 }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', opacity: (isMobile ? isMobileOpen : isExpanded) ? 1 : 0, transition: 'opacity 0.2s', whiteSpace: 'nowrap', overflow: 'hidden', width: (isMobile ? isMobileOpen : isExpanded) ? 'auto' : 0 }}>
                             <span style={{ fontSize: '0.9rem', fontWeight: '600' }}>{session.user.name.split(' ')[0]}</span>
                             <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>View Profile</span>
                         </div>
@@ -205,17 +211,17 @@ export default function Sidebar() {
                 {/* Theme Toggle */}
                 <div style={{
                     display: 'flex', alignItems: 'center',
-                    justifyContent: isExpanded ? 'flex-start' : 'center',
-                    gap: isExpanded ? '16px' : 0,
-                    padding: isExpanded ? '8px 0' : '0',
-                    margin: isExpanded ? '0 12px' : '0 auto',
-                    width: isExpanded ? 'calc(100% - 24px)' : '44px',
-                    height: isExpanded ? 'auto' : '44px',
+                    justifyContent: (isMobile ? isMobileOpen : isExpanded) ? 'flex-start' : 'center',
+                    gap: (isMobile ? isMobileOpen : isExpanded) ? '16px' : 0,
+                    padding: (isMobile ? isMobileOpen : isExpanded) ? '8px 0' : '0',
+                    margin: (isMobile ? isMobileOpen : isExpanded) ? '0 12px' : '0 auto',
+                    width: (isMobile ? isMobileOpen : isExpanded) ? 'calc(100% - 24px)' : '44px',
+                    height: (isMobile ? isMobileOpen : isExpanded) ? 'auto' : '44px',
                 }}>
                     <div style={{ display: 'flex', justifyContent: 'center', minWidth: '40px', flexShrink: 0 }}>
                         <ThemeToggle />
                     </div>
-                    <span style={{ fontSize: '0.9rem', color: '#cbd5e1', opacity: isExpanded ? 1 : 0, transition: 'opacity 0.2s', whiteSpace: 'nowrap', width: isExpanded ? 'auto' : 0, overflow: 'hidden' }}>
+                    <span style={{ fontSize: '0.9rem', color: '#cbd5e1', opacity: (isMobile ? isMobileOpen : isExpanded) ? 1 : 0, transition: 'opacity 0.2s', whiteSpace: 'nowrap', width: (isMobile ? isMobileOpen : isExpanded) ? 'auto' : 0, overflow: 'hidden' }}>
                         Switch Theme
                     </span>
                 </div>
@@ -223,17 +229,17 @@ export default function Sidebar() {
                 {/* Language Selector */}
                 <div style={{
                     display: 'flex', alignItems: 'center',
-                    justifyContent: isExpanded ? 'flex-start' : 'center',
-                    gap: isExpanded ? '12px' : 0,
+                    justifyContent: (isMobile ? isMobileOpen : isExpanded) ? 'flex-start' : 'center',
+                    gap: (isMobile ? isMobileOpen : isExpanded) ? '12px' : 0,
                     padding: '8px 0',
-                    margin: isExpanded ? '0 12px' : '0 auto',
-                    width: isExpanded ? 'calc(100% - 24px)' : '44px',
-                    height: isExpanded ? 'auto' : '44px',
+                    margin: (isMobile ? isMobileOpen : isExpanded) ? '0 12px' : '0 auto',
+                    width: (isMobile ? isMobileOpen : isExpanded) ? 'calc(100% - 24px)' : '44px',
+                    height: (isMobile ? isMobileOpen : isExpanded) ? 'auto' : '44px',
                 }}>
                     <div style={{ minWidth: '40px', display: 'flex', justifyContent: 'center', alignItems: 'center', flexShrink: 0 }}>
                         <Globe size={20} color="#94a3b8" />
                     </div>
-                    <div style={{ opacity: isExpanded ? 1 : 0, transition: 'opacity 0.2s', width: isExpanded ? 'auto' : 0, overflow: 'visible' }}>
+                    <div style={{ opacity: (isMobile ? isMobileOpen : isExpanded) ? 1 : 0, transition: 'opacity 0.2s', width: (isMobile ? isMobileOpen : isExpanded) ? 'auto' : 0, overflow: 'visible' }}>
                         <LanguageSelector />
                     </div>
                 </div>
@@ -251,7 +257,7 @@ export default function Sidebar() {
                         }}
                     >
                         <LogOut size={20} style={{ minWidth: '22px', flexShrink: 0 }} />
-                        <span style={{ opacity: isExpanded ? 1 : 0, transition: 'opacity 0.2s', width: isExpanded ? 'auto' : 0, overflow: 'hidden' }}>Logout</span>
+                        <span style={{ opacity: (isMobile ? isMobileOpen : isExpanded) ? 1 : 0, transition: 'opacity 0.2s', width: (isMobile ? isMobileOpen : isExpanded) ? 'auto' : 0, overflow: 'hidden' }}>Logout</span>
                     </button>
                 ) : (
                     <Link
@@ -263,7 +269,7 @@ export default function Sidebar() {
                         }}
                     >
                         <LogIn size={20} style={{ minWidth: '22px', flexShrink: 0 }} />
-                        <span style={{ opacity: isExpanded ? 1 : 0, transition: 'opacity 0.2s', width: isExpanded ? 'auto' : 0, overflow: 'hidden' }}>Login</span>
+                        <span style={{ opacity: (isMobile ? isMobileOpen : isExpanded) ? 1 : 0, transition: 'opacity 0.2s', width: (isMobile ? isMobileOpen : isExpanded) ? 'auto' : 0, overflow: 'hidden' }}>Login</span>
                     </Link>
                 )}
             </div>
