@@ -256,6 +256,46 @@ body {
   gap: 24px;
 }
 
+/* Sticky Grid for Stats - 4 cols desktop, 2 cols mobile, 1 col very small */
+.sticky-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+@media (max-width: 1024px) {
+  .sticky-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .sticky-grid {
+    grid-template-columns: 1fr;
+    /* Stack on very small screens */
+  }
+}
+
+/* Hero Title Responsive */
+.hero-title {
+  font-size: 4rem;
+  color: white;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+  margin-bottom: 12px;
+  font-weight: 800;
+}
+
+@media (max-width: 640px) {
+  .hero-title {
+    font-size: 2.5rem !important;
+  }
+
+  .hero-badges {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
 /* Scrollbar hiding for clean UI */
 ::-webkit-scrollbar {
   width: 8px;

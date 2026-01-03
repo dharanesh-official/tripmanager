@@ -710,12 +710,12 @@ export default function TripDetails() {
                         <motion.h1
                             initial={{ y: 20, opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}
-                            style={{ fontSize: '4rem', color: 'white', textShadow: '0 4px 20px rgba(0,0,0,0.6)', marginBottom: '12px', fontWeight: '800' }}
+                            className="hero-title"
                         >
                             {trip.title}
                         </motion.h1>
                         <div className="flex-between hero-buttons" style={{ color: 'white', alignItems: 'flex-end' }}>
-                            <div className="flex-center" style={{ gap: '24px' }}>
+                            <div className="flex-center hero-badges" style={{ gap: '24px' }}>
                                 <span className="flex-center" style={{ gap: '8px', fontSize: '1.2rem', fontWeight: '600', textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
                                     <Calendar size={22} /> {new Date(trip.startDate).toLocaleDateString()} - {new Date(trip.endDate).toLocaleDateString()}
                                 </span>
@@ -836,7 +836,7 @@ export default function TripDetails() {
                         <div id="itinerary-content" style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '32px', background: 'var(--background)', padding: '20px' }}>
 
 
-                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px' }}>
+                            <div className="sticky-grid">
                                 {/* Duration Card */}
                                 <div className="card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: 'var(--card-bg)', border: '1px solid var(--border)' }}>
                                     <div style={{ padding: '16px', borderRadius: '50%', background: 'rgba(139, 92, 246, 0.1)', marginBottom: '16px' }}>
