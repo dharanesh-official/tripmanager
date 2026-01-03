@@ -121,7 +121,7 @@ export default function Sidebar() {
                     color: '#94a3b8',
                     display: 'flex',
                     flexDirection: 'column',
-                    padding: '24px 0', // Zero side padding for control
+                    padding: isMobile ? '80px 0 24px 0' : '24px 0', // Extra top padding on mobile for X button
                     borderRight: '1px solid #1e293b',
                     flexShrink: 0,
                     transition: 'width 0.3s ease, transform 0.3s ease',
@@ -140,7 +140,7 @@ export default function Sidebar() {
                 alignItems: 'center',
                 justifyContent: (isMobile ? isMobileOpen : isExpanded) ? 'flex-start' : 'center',
                 gap: '12px',
-                marginBottom: '48px',
+                marginBottom: isMobile ? '24px' : '48px',
                 color: 'white',
                 padding: (isMobile ? isMobileOpen : isExpanded) ? '0 24px' : '0',
                 width: '100%',
