@@ -294,6 +294,24 @@ body {
     flex-wrap: wrap;
     justify-content: center;
   }
+
+  /* Mobile adjustments for sidebar */
+  body {
+    overflow-x: hidden;
+  }
+
+  .sidebar {
+    position: fixed !important;
+    left: 0 !important;
+    top: 0 !important;
+  }
+}
+
+@media (max-width: 768px) {
+  /* On mobile/tablet, ensure no sidebar pushes content */
+  main {
+    margin-left: 0;
+  }
 }
 
 /* Scrollbar hiding for clean UI */

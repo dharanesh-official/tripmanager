@@ -1,11 +1,11 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useSession, signOut } from 'next-auth/react';
 import {
     LayoutDashboard, Map, Heart, Settings,
-    HelpCircle, LogOut, Compass, User, Globe, LogIn, BarChart3
+    HelpCircle, LogOut, Compass, User, Globe, LogIn, BarChart3, Menu, X
 } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 import LanguageSelector from './LanguageSelector';
@@ -14,6 +14,22 @@ export default function Sidebar() {
     const pathname = usePathname();
     const { data: session } = useSession();
     const [isExpanded, setIsExpanded] = useState(false);
+    const [isMobileOpen, setIsMobileOpen] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
+
+    // Check if mobile on mount and on resize
+    useEffect(() => {
+        const checkMobile = () => {
+            setIsMobile(window.innerWidth < 768);
+            if (window.innerWidth >= 768) {
+                setIsMobileOpen(false); // Close mobile menu on desktop
+            }
+        };
+        
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
 
     const navItems = [
         { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
@@ -47,26 +63,72 @@ export default function Sidebar() {
     });
 
     return (
-        <aside
-            onMouseEnter={() => setIsExpanded(true)}
-            onMouseLeave={() => setIsExpanded(false)}
-            className="sidebar"
-            style={{
-                width: isExpanded ? '280px' : '100px',
-                height: '100vh',
-                background: '#0f172a', // Always dark
-                color: '#94a3b8',
-                display: 'flex',
-                flexDirection: 'column',
-                padding: '24px 0', // Zero side padding for control
-                borderRight: '1px solid #1e293b',
-                flexShrink: 0,
-                transition: 'width 0.3s ease',
-                overflow: 'visible',
-                position: 'relative',
-                zIndex: 50
-            }}
-        >
+        <>
+            {/* Mobile Menu Button - Only visible on mobile */}
+            {isMobile && (
+                <button
+                    onClick={() => setIsMobileOpen(!isMobileOpen)}
+                    style={{
+                        position: 'fixed',
+                        top: '20px',
+                        left: '20px',
+                        zIndex: 1001,
+                        background: '#3b82f6',
+                        border: 'none',
+                        borderRadius: '8px',
+                        padding: '10px',
+                        color: 'white',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    }}
+                >
+                    {isMobileOpen ? <X size={24} /> : <Menu size={24} />}
+                </button>
+            )}
+
+            {/* Mobile Overlay - Click to close */}
+            {isMobile && isMobileOpen && (
+                <div
+                    onClick={() => setIsMobileOpen(false)}
+                    style={{
+                        position: 'fixed',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        background: 'rgba(0, 0, 0, 0.5)',
+                        zIndex: 39,
+                    }}
+                />
+            )}
+
+            {/* Sidebar */}
+            <aside
+                onMouseEnter={() => !isMobile && setIsExpanded(true)}
+                onMouseLeave={() => !isMobile && setIsExpanded(false)}
+                className="sidebar"
+                style={{
+                    width: isMobile ? '280px' : isExpanded ? '280px' : '100px',
+                    height: '100vh',
+                    background: '#0f172a', // Always dark
+                    color: '#94a3b8',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    padding: '24px 0', // Zero side padding for control
+                    borderRight: '1px solid #1e293b',
+                    flexShrink: 0,
+                    transition: 'width 0.3s ease, transform 0.3s ease',
+                    overflow: 'visible',
+                    position: 'fixed',
+                    left: 0,
+                    top: 0,
+                    zIndex: 40,
+                    transform: isMobile && !isMobileOpen ? 'translateX(-100%)' : 'translateX(0)',
+                    boxShadow: isMobile && isMobileOpen ? '0 10px 40px rgba(0, 0, 0, 0.3)' : 'none',
+                }}
+            >
             {/* Logo */}
             <div className="sidebar-logo" style={{
                 display: 'flex',
@@ -205,6 +267,7 @@ export default function Sidebar() {
                     </Link>
                 )}
             </div>
-        </aside>
+            </aside>
+        </>
     );
 }
