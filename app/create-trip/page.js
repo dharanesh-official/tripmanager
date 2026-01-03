@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import Sidebar from '@/components/Sidebar';
@@ -9,10 +9,16 @@ import { Calendar, MapPin, Type, Image as ImageIcon, Navigation, Loader2 } from 
 
 export default function CreateTrip() {
     const router = useRouter();
-    const { data: session } = useSession();
+    const { data: session, status } = useSession();
     const [loading, setLoading] = useState(false);
     const [calculating, setCalculating] = useState(false);
     const [tripStats, setTripStats] = useState(null);
+
+    useEffect(() => {
+        if (status === 'unauthenticated') {
+            router.push('/login');
+        }
+    }, [status, router]);
 
     const [suggestions, setSuggestions] = useState({ from: [], to: [] });
     const [isSearching, setIsSearching] = useState({ from: false, to: false });

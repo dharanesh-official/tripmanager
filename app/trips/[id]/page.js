@@ -10,7 +10,7 @@ import { useSession, signOut } from 'next-auth/react';
 import { useToast } from '@/components/Toast';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-    Calendar, MapPin, Clock, DollarSign, Plus,
+    Calendar, MapPin, Clock, IndianRupee, Plus,
     Coffee, Plane, Hotel, Camera, Trash2, Share2,
     BarChart3, Sparkles, Users, Send, User, LogOut, Globe
 } from 'lucide-react';
@@ -706,7 +706,7 @@ export default function TripDetails() {
                         alt="Trip Cover"
                         style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(0.6)' }}
                     />
-                    <div className="container" style={{ position: 'absolute', bottom: '32px', left: '50%', transform: 'translateX(-50%)', width: '100%' }}>
+                    <div className="container hero-content" style={{ position: 'absolute', bottom: '32px', left: '50%', transform: 'translateX(-50%)', width: '100%' }}>
                         <motion.h1
                             initial={{ y: 20, opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}
@@ -714,7 +714,7 @@ export default function TripDetails() {
                         >
                             {trip.title}
                         </motion.h1>
-                        <div className="flex-between" style={{ color: 'white', alignItems: 'flex-end' }}>
+                        <div className="flex-between hero-buttons" style={{ color: 'white', alignItems: 'flex-end' }}>
                             <div className="flex-center" style={{ gap: '24px' }}>
                                 <span className="flex-center" style={{ gap: '8px', fontSize: '1.2rem', fontWeight: '600', textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
                                     <Calendar size={22} /> {new Date(trip.startDate).toLocaleDateString()} - {new Date(trip.endDate).toLocaleDateString()}
@@ -779,7 +779,7 @@ export default function TripDetails() {
                                     </button>
                                 )}
                                 <div style={{ background: 'rgba(0,0,0,0.6)', padding: '8px 16px', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '8px', border: '1px solid rgba(255,255,255,0.2)' }}>
-                                    <DollarSign size={16} color="var(--primary-color)" />
+                                    <IndianRupee size={16} color="var(--primary-color)" />
                                     <span style={{ fontWeight: '600', color: 'var(--primary-color)' }}>₹{totalCost}</span>
                                     <span style={{ fontSize: '0.8rem', opacity: 0.7 }}>Est. Cost</span>
                                 </div>
@@ -836,34 +836,34 @@ export default function TripDetails() {
                         <div id="itinerary-content" style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '32px', background: 'var(--background)', padding: '20px' }}>
 
 
-                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '24px', overflowX: 'auto', paddingBottom: '4px' }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px' }}>
                                 {/* Duration Card */}
-                                <div className="card" style={{ padding: '40px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: 'var(--card-bg)', border: '1px solid var(--border)' }}>
-                                    <div style={{ padding: '16px', borderRadius: '50%', background: 'rgba(139, 92, 246, 0.1)', marginBottom: '20px' }}>
-                                        <Clock size={40} color="#8b5cf6" />
+                                <div className="card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: 'var(--card-bg)', border: '1px solid var(--border)' }}>
+                                    <div style={{ padding: '16px', borderRadius: '50%', background: 'rgba(139, 92, 246, 0.1)', marginBottom: '16px' }}>
+                                        <Clock size={32} color="#8b5cf6" />
                                     </div>
-                                    <span style={{ fontSize: '1.2rem', color: 'var(--text-secondary)', fontWeight: '500', textAlign: 'center' }}>Trip Duration</span>
-                                    <h2 style={{ fontSize: '3.5rem', color: '#8b5cf6', margin: '12px 0', fontWeight: '900', textAlign: 'center' }}>{totalDays} <span style={{ fontSize: '1.5rem', fontWeight: '600' }}>Days</span></h2>
-                                    <p style={{ fontSize: '1.1rem', color: 'var(--text-secondary)', textAlign: 'center' }}>Relax & Enjoy</p>
+                                    <span style={{ fontSize: '1rem', color: 'var(--text-secondary)', fontWeight: '500', textAlign: 'center' }}>Trip Duration</span>
+                                    <h2 style={{ fontSize: '2.5rem', color: '#8b5cf6', margin: '8px 0', fontWeight: '900', textAlign: 'center' }}>{totalDays} <span style={{ fontSize: '1.2rem', fontWeight: '600' }}>Days</span></h2>
+                                    <p style={{ fontSize: '1rem', color: 'var(--text-secondary)', textAlign: 'center' }}>Relax & Enjoy</p>
                                 </div>
 
                                 {/* Dates Card */}
-                                <div className="card" style={{ padding: '40px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: 'var(--card-bg)', border: '1px solid var(--border)' }}>
-                                    <div style={{ padding: '16px', borderRadius: '50%', background: 'rgba(245, 158, 11, 0.1)', marginBottom: '20px' }}>
-                                        <Calendar size={40} color="#f59e0b" />
+                                <div className="card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: 'var(--card-bg)', border: '1px solid var(--border)' }}>
+                                    <div style={{ padding: '16px', borderRadius: '50%', background: 'rgba(245, 158, 11, 0.1)', marginBottom: '16px' }}>
+                                        <Calendar size={32} color="#f59e0b" />
                                     </div>
-                                    <span style={{ fontSize: '1.2rem', color: 'var(--text-secondary)', fontWeight: '500', textAlign: 'center' }}>Trip Dates</span>
-                                    <h2 style={{ fontSize: '1.8rem', color: '#f59e0b', margin: '12px 0', fontWeight: '800', textAlign: 'center' }}>
+                                    <span style={{ fontSize: '1rem', color: 'var(--text-secondary)', fontWeight: '500', textAlign: 'center' }}>Trip Dates</span>
+                                    <h2 style={{ fontSize: '1.5rem', color: '#f59e0b', margin: '8px 0', fontWeight: '800', textAlign: 'center', whiteSpace: 'nowrap' }}>
                                         {new Date(trip.startDate).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })} - {new Date(trip.endDate).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
                                     </h2>
-                                    <p style={{ fontSize: '1.1rem', color: 'var(--text-secondary)', textAlign: 'center' }}>{new Date(trip.startDate).getFullYear()}</p>
+                                    <p style={{ fontSize: '1rem', color: 'var(--text-secondary)', textAlign: 'center' }}>{new Date(trip.startDate).getFullYear()}</p>
                                 </div>
 
                                 {/* Members Card */}
                                 <div
                                     className="card"
                                     style={{
-                                        padding: '40px',
+                                        padding: '24px',
                                         display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
                                         cursor: canEdit ? 'pointer' : 'default',
                                         border: canEdit ? '2px solid #3b82f6' : '1px solid var(--border)',
@@ -875,15 +875,15 @@ export default function TripDetails() {
                                         if (canEdit) setMembersModalOpen(true);
                                     }}
                                 >
-                                    <div style={{ padding: '16px', borderRadius: '50%', background: 'rgba(59, 130, 246, 0.1)', marginBottom: '20px' }}>
-                                        <Users size={40} color="#3b82f6" />
+                                    <div style={{ padding: '16px', borderRadius: '50%', background: 'rgba(59, 130, 246, 0.1)', marginBottom: '16px' }}>
+                                        <Users size={32} color="#3b82f6" />
                                     </div>
-                                    <span style={{ fontSize: '1.2rem', color: 'var(--text-secondary)', fontWeight: '500', textAlign: 'center' }}>Total Trip Members</span>
-                                    <h2 style={{ fontSize: '3.5rem', color: '#3b82f6', margin: '12px 0', fontWeight: '900', textAlign: 'center' }}>
+                                    <span style={{ fontSize: '1rem', color: 'var(--text-secondary)', fontWeight: '500', textAlign: 'center' }}>Trip Members</span>
+                                    <h2 style={{ fontSize: '2.5rem', color: '#3b82f6', margin: '8px 0', fontWeight: '900', textAlign: 'center' }}>
                                         {(trip.collaborators?.length || 0) + 1}
                                     </h2>
-                                    <p style={{ fontSize: '1.1rem', color: canEdit ? '#3b82f6' : 'var(--text-secondary)', fontWeight: canEdit ? '700' : '400', textAlign: 'center', lineHeight: '1.4' }}>
-                                        {canEdit ? `Click to View Members 👥` : 'People travelling'}
+                                    <p style={{ fontSize: '1rem', color: canEdit ? '#3b82f6' : 'var(--text-secondary)', fontWeight: canEdit ? '700' : '400', textAlign: 'center', lineHeight: '1.4' }}>
+                                        {canEdit ? `View Members 👥` : 'People travelling'}
                                     </p>
                                 </div>
 
@@ -891,7 +891,7 @@ export default function TripDetails() {
                                 <div
                                     className="card"
                                     style={{
-                                        padding: '40px',
+                                        padding: '24px',
                                         display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
                                         cursor: canEdit ? 'pointer' : 'default',
                                         border: canEdit ? '2px solid var(--primary-color)' : '1px solid var(--border)',
@@ -901,13 +901,13 @@ export default function TripDetails() {
                                     }}
                                     onClick={() => canEdit && setBudgetModalOpen(true)}
                                 >
-                                    <div style={{ padding: '16px', borderRadius: '50%', background: 'rgba(45, 212, 191, 0.1)', marginBottom: '20px' }}>
-                                        <DollarSign size={40} color="var(--primary-color)" />
+                                    <div style={{ padding: '16px', borderRadius: '50%', background: 'rgba(45, 212, 191, 0.1)', marginBottom: '16px' }}>
+                                        <IndianRupee size={32} color="var(--primary-color)" />
                                     </div>
-                                    <span style={{ fontSize: '1.2rem', color: 'var(--text-secondary)', fontWeight: '500', textAlign: 'center' }}>Total Estimated Cost</span>
-                                    <h2 style={{ fontSize: '3.5rem', color: 'var(--primary-color)', margin: '12px 0', fontWeight: '900', textAlign: 'center' }}>₹{totalCost}</h2>
-                                    <p style={{ fontSize: '1.1rem', color: canEdit ? 'var(--primary-color)' : 'var(--text-secondary)', fontWeight: canEdit ? '700' : '400', textAlign: 'center', lineHeight: '1.4' }}>
-                                        {canEdit ? 'Click to Manage Budget ✏️' : 'Based on planned activities'}
+                                    <span style={{ fontSize: '1rem', color: 'var(--text-secondary)', fontWeight: '500', textAlign: 'center' }}>Estimated Cost</span>
+                                    <h2 style={{ fontSize: '2.5rem', color: 'var(--primary-color)', margin: '8px 0', fontWeight: '900', textAlign: 'center' }}>₹{totalCost}</h2>
+                                    <p style={{ fontSize: '1rem', color: canEdit ? 'var(--primary-color)' : 'var(--text-secondary)', fontWeight: canEdit ? '700' : '400', textAlign: 'center', lineHeight: '1.4' }}>
+                                        {canEdit ? 'Manage Budget ✏️' : 'Planned activities'}
                                     </p>
                                 </div>
                             </div>
@@ -1003,7 +1003,7 @@ export default function TripDetails() {
                                 onClick={() => canEdit && setBudgetModalOpen(true)}
                             >
                                 <div style={{ padding: '16px', borderRadius: '50%', background: 'rgba(45, 212, 191, 0.1)', marginBottom: '20px' }}>
-                                    <DollarSign size={40} color="var(--primary-color)" />
+                                    <IndianRupee size={40} color="var(--primary-color)" />
                                 </div>
                                 <span style={{ fontSize: '1.2rem', color: 'var(--text-secondary)', fontWeight: '500' }}>Total Estimated Cost</span>
                                 <h2 style={{ fontSize: '3.5rem', color: 'var(--primary-color)', margin: '12px 0', fontWeight: '900' }}>₹{totalCost}</h2>

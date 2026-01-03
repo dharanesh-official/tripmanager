@@ -4,8 +4,13 @@ import Sidebar from '@/components/Sidebar';
 import { motion } from 'framer-motion';
 import { ArrowRight, Star, Globe, Map } from 'lucide-react';
 import Link from 'next/link';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 export default function Home() {
+  const { status } = useSession();
+  const router = useRouter();
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -64,9 +69,19 @@ export default function Home() {
             </motion.p>
 
             <motion.div variants={itemVariants} className="flex-center" style={{ gap: '20px', flexWrap: 'wrap' }}>
-              <Link href="/create-trip" className="btn btn-primary" style={{ padding: '16px 40px', fontSize: '1.1rem' }}>
+              <button
+                onClick={() => {
+                  if (status === 'authenticated') {
+                    router.push('/create-trip');
+                  } else {
+                    router.push('/login');
+                  }
+                }}
+                className="btn btn-primary"
+                style={{ padding: '16px 40px', fontSize: '1.1rem' }}
+              >
                 Start Planning <ArrowRight size={20} />
-              </Link>
+              </button>
             </motion.div>
           </motion.div>
         </section>

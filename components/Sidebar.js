@@ -32,24 +32,25 @@ export default function Sidebar() {
         alignItems: 'center',
         justifyContent: isExpanded ? 'flex-start' : 'center',
         gap: isExpanded ? '12px' : 0,
-        padding: isExpanded ? '12px 14px' : '0', // No padding when collapsed
-        margin: isExpanded ? '0 12px' : '0 auto', // Center the box itself when collapsed
-        width: isExpanded ? 'calc(100% - 24px)' : '44px',
-        height: isExpanded ? 'auto' : '44px', // Fixed height for square look
+        padding: isExpanded ? '12px 14px' : '0',
+        margin: isExpanded ? '0 12px' : '0 auto',
+        width: isExpanded ? 'calc(100% - 24px)' : '40px', // Slightly smaller for cleaner look
+        height: isExpanded ? 'auto' : '40px',
         borderRadius: '12px',
         textDecoration: 'none',
         color: isActive ? 'white' : 'inherit',
         background: isActive ? '#3b82f6' : 'transparent',
+        boxShadow: isActive ? '0 4px 12px rgba(59, 130, 246, 0.4)' : 'none', // Better shadow or none if preferred
         transition: 'all 0.2s',
         fontWeight: '500',
         whiteSpace: 'nowrap',
-        // overflow: 'hidden' -> REMOVED to allow dropdowns to pop out
     });
 
     return (
         <aside
             onMouseEnter={() => setIsExpanded(true)}
             onMouseLeave={() => setIsExpanded(false)}
+            className="sidebar"
             style={{
                 width: isExpanded ? '280px' : '100px',
                 height: '100vh',
@@ -61,21 +62,13 @@ export default function Sidebar() {
                 borderRight: '1px solid #1e293b',
                 flexShrink: 0,
                 transition: 'width 0.3s ease',
-                overflow: 'visible', // Allow dropdowns to overflow sidebar if needed (though width transition might clip)
-                // Actually sidebar needs overflow hidden for width transition usually, but let's try visible for dropdowns?
-                // If overflow is visible, collapsed width might show content. 
-                // Better to keep sidebar overflow visible but manage content opacity.
-                // However, 'transition: width' works best with overflow hidden. 
-                // COMPROMISE: We keep Sidebar overflow hidden (or we lose the clean slide effect), 
-                // but LanguageSelector might need to be fixed position or handle its own popper. 
-                // Since I can't change LanguageSelector, I will remove overflow hidden from ITEM containers.
                 overflow: 'visible',
                 position: 'relative',
                 zIndex: 50
             }}
         >
             {/* Logo */}
-            <div style={{
+            <div className="sidebar-logo" style={{
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: isExpanded ? 'flex-start' : 'center',
@@ -85,7 +78,7 @@ export default function Sidebar() {
                 padding: isExpanded ? '0 24px' : '0',
                 width: '100%',
                 boxSizing: 'border-box',
-                overflow: 'hidden' // Logo can be hidden
+                overflow: 'hidden'
             }}>
                 <div style={{
                     background: '#3b82f6',
@@ -107,7 +100,7 @@ export default function Sidebar() {
             </div>
 
             {/* Nav Items */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', flex: 1, width: '100%' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', flex: 1, width: '100%' }} className="sidebar-nav">
                 {navItems.map((item) => {
                     const isActive = pathname === item.href || (item.name === 'Dashboard' && pathname.startsWith('/trips'));
 
@@ -118,14 +111,14 @@ export default function Sidebar() {
                             style={getItemStyle(isActive)}
                         >
                             <item.icon size={22} style={{ minWidth: '22px', flexShrink: 0 }} />
-                            <span style={{ opacity: isExpanded ? 1 : 0, transition: 'opacity 0.2s', overflow: 'hidden' }}>{item.name}</span>
+                            <span className="sidebar-text" style={{ opacity: isExpanded ? 1 : 0, transition: 'opacity 0.2s', overflow: 'hidden' }}>{item.name}</span>
                         </Link>
                     )
                 })}
             </div>
 
             {/* Bottom Actions */}
-            <div style={{ borderTop: '1px solid #1e293b', paddingTop: '24px', display: 'flex', flexDirection: 'column', gap: '12px', width: '100%' }}>
+            <div className="sidebar-theme-toggle" style={{ borderTop: '1px solid #1e293b', paddingTop: '24px', display: 'flex', flexDirection: 'column', gap: '12px', width: '100%' }}>
 
                 {/* Profile */}
                 {session && (
@@ -156,7 +149,6 @@ export default function Sidebar() {
                     margin: isExpanded ? '0 12px' : '0 auto',
                     width: isExpanded ? 'calc(100% - 24px)' : '44px',
                     height: isExpanded ? 'auto' : '44px',
-                    // overflow: 'hidden' -> REMOVED
                 }}>
                     <div style={{ display: 'flex', justifyContent: 'center', minWidth: '40px', flexShrink: 0 }}>
                         <ThemeToggle />
@@ -175,7 +167,6 @@ export default function Sidebar() {
                     margin: isExpanded ? '0 12px' : '0 auto',
                     width: isExpanded ? 'calc(100% - 24px)' : '44px',
                     height: isExpanded ? 'auto' : '44px',
-                    // overflow: 'hidden' -> REMOVED
                 }}>
                     <div style={{ minWidth: '40px', display: 'flex', justifyContent: 'center', alignItems: 'center', flexShrink: 0 }}>
                         <Globe size={20} color="#94a3b8" />
