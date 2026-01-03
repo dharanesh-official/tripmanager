@@ -52,6 +52,11 @@ const AddItemModal = ({ isOpen, onClose, onAdd, day }) => {
             const res = await fetch(`https://photon.komoot.io/api/?q=${encodeURIComponent(query)}&limit=5&tag=tourism&tag=amenity&tag=leisure`);
             const data = await res.json();
 
+            if (!data || !data.features) {
+                setSuggestions([]);
+                return;
+            }
+
             const results = data.features.map(item => ({
                 name: item.properties.name,
                 city: item.properties.city || item.properties.state,
@@ -644,23 +649,35 @@ export default function TripDetails() {
 
     const handleAddItem = async (formData) => {
         if (!id) return;
+        if (!formData.title?.trim()) {
+            alert("Please enter a title");
+            return;
+        }
 
         try {
+            const payload = {
+                ...formData,
+                day: selectedDay,
+                location: { name: formData.location },
+                cost: Number(formData.cost) || 0
+            };
+
             const res = await fetch(`/api/trips/${id}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    ...formData,
-                    day: selectedDay,
-                    location: { name: formData.location }
-                })
+                body: JSON.stringify(payload)
             });
+
             if (res.ok) {
                 setModalOpen(false);
                 fetchData(id); // Refresh list
+            } else {
+                const data = await res.json();
+                alert(data.message || "Failed to add item");
             }
         } catch (e) {
             console.error(e);
+            alert("An error occurred while adding the item");
         }
     };
 
@@ -713,14 +730,42 @@ export default function TripDetails() {
                             </div>
                             <div className="flex-center" style={{ gap: '12px' }}>
                                 {isOwner && (
-                                    <button
+                                    <div
                                         onClick={handleToggleVisibility}
-                                        className="btn btn-secondary"
-                                        style={{ color: 'white', borderColor: 'rgba(255,255,255,0.3)', background: 'transparent' }}
-                                        title={trip.visibility === 'public' ? 'Make Private' : 'Make Public'}
+                                        style={{
+                                            display: 'grid', gridTemplateColumns: '1fr 1fr', alignItems: 'center',
+                                            background: 'rgba(0,0,0,0.4)', borderRadius: '30px', padding: '4px',
+                                            cursor: 'pointer', border: '1px solid rgba(255,255,255,0.2)', position: 'relative',
+                                            height: '42px', width: '180px', marginRight: '12px'
+                                        }}
+                                        title="Click to toggle visibility"
                                     >
-                                        <Globe size={18} /> {trip.visibility === 'public' ? 'Public' : 'Private'}
-                                    </button>
+                                        <div style={{
+                                            textAlign: 'center', fontSize: '0.9rem', fontWeight: '600',
+                                            color: 'white', zIndex: 1, pointerEvents: 'none'
+                                        }}>
+                                            Public
+                                        </div>
+                                        <div style={{
+                                            textAlign: 'center', fontSize: '0.9rem', fontWeight: '600',
+                                            color: 'white', zIndex: 1, pointerEvents: 'none'
+                                        }}>
+                                            Private
+                                        </div>
+                                        <motion.div
+                                            initial={false}
+                                            animate={{
+                                                x: trip.visibility === 'public' ? '0%' : '100%'
+                                            }}
+                                            transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                                            style={{
+                                                position: 'absolute', left: '4px', top: '4px', bottom: '4px',
+                                                width: 'calc(50% - 4px)',
+                                                background: trip.visibility === 'public' ? '#10b981' : '#ef4444',
+                                                borderRadius: '20px', zIndex: 0
+                                            }}
+                                        />
+                                    </div>
                                 )}
                                 <button onClick={handleDownloadPDF} className="btn btn-secondary" style={{ color: 'white', borderColor: 'rgba(255,255,255,0.3)', background: 'transparent' }}>
                                     <Share2 size={18} /> Download

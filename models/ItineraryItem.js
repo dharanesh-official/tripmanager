@@ -12,7 +12,7 @@ const ItineraryItemSchema = new mongoose.Schema({
     },
     type: {
         type: String,
-        enum: ['activity', 'transport', 'stay', 'food'],
+        enum: ['activity', 'transport', 'stay', 'food', 'visiting'],
         default: 'activity',
     },
     title: {
@@ -46,5 +46,13 @@ const ItineraryItemSchema = new mongoose.Schema({
 }, {
     timestamps: true,
 });
+
+// FORCE MODEL REFRESH IN DEV
+// This is required to pick up the Enum change without restarting the server
+if (process.env.NODE_ENV === 'development') {
+    if (mongoose.models.ItineraryItem) {
+        delete mongoose.models.ItineraryItem;
+    }
+}
 
 export default mongoose.models.ItineraryItem || mongoose.model('ItineraryItem', ItineraryItemSchema);

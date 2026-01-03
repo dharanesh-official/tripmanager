@@ -5,7 +5,7 @@ import { signIn } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Mail, Lock, AlertCircle, Eye, EyeOff } from 'lucide-react';
+import { Mail, Lock, AlertCircle, Eye, EyeOff, ArrowLeft } from 'lucide-react';
 
 function LoginForm() {
     const router = useRouter();
@@ -48,10 +48,22 @@ function LoginForm() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             className="card"
-            style={{ width: '100%', maxWidth: '450px', position: 'relative', zIndex: 1, backdropFilter: 'blur(20px)', background: 'rgba(24, 24, 27, 0.8)' }}
+            style={{
+                width: '100%',
+                maxWidth: '450px',
+                position: 'relative',
+                zIndex: 1,
+                backdropFilter: 'blur(20px)',
+                background: 'var(--card-bg)',
+                border: '1px solid var(--border)'
+            }}
         >
+            <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-secondary)', marginBottom: '20px', textDecoration: 'none', fontSize: '0.9rem', width: 'fit-content' }}>
+                <ArrowLeft size={16} /> Back to Home
+            </Link>
+
             <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-                <h1 className="text-gradient" style={{ fontSize: '2.5rem', marginBottom: '8px' }}>Welcome Back</h1>
+                <h1 className="text-gradient" style={{ fontSize: '2.5rem', marginBottom: '8px', bgClip: 'text', color: 'var(--text-main)' }}>Welcome Back</h1>
                 <p style={{ color: 'var(--text-secondary)' }}>Login to continue planning your trips.</p>
             </div>
 

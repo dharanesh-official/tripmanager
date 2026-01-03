@@ -10,7 +10,8 @@ export default function ForgotPassword() {
     const [step, setStep] = useState(1); // 1: Email, 2: OTP + New Password
     const [email, setEmail] = useState('');
     const [otp, setOtp] = useState('');
-    const [newPassword, setNewPassword] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
     const [status, setStatus] = useState('idle');
     const [message, setMessage] = useState('');
     const [timer, setTimer] = useState(0);
@@ -56,13 +57,20 @@ export default function ForgotPassword() {
 
     const handleResetPassword = async (e) => {
         e.preventDefault();
+
+        if (password !== confirmPassword) {
+            setStatus('error');
+            setMessage("Passwords don't match");
+            return;
+        }
+
         setStatus('loading');
 
         try {
             const res = await fetch('/api/auth/reset-password', {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, code: otp, newPassword }),
+                body: JSON.stringify({ email, code: otp, newPassword: password }),
             });
 
             if (res.ok) {
@@ -154,7 +162,7 @@ export default function ForgotPassword() {
                                     </div>
                                 </div>
 
-                                <div style={{ marginBottom: '24px' }}>
+                                <div style={{ marginBottom: '16px' }}>
                                     <label style={{ display: 'block', marginBottom: '8px', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>New Password</label>
                                     <div className="input-group">
                                         <Lock size={20} color="var(--text-secondary)" />
@@ -162,8 +170,24 @@ export default function ForgotPassword() {
                                             type="password"
                                             className="input-field"
                                             placeholder="Min 6 characters"
-                                            value={newPassword}
-                                            onChange={(e) => setNewPassword(e.target.value)}
+                                            value={password}
+                                            onChange={(e) => setPassword(e.target.value)}
+                                            required
+                                            minLength={6}
+                                        />
+                                    </div>
+                                </div>
+
+                                <div style={{ marginBottom: '24px' }}>
+                                    <label style={{ display: 'block', marginBottom: '8px', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Confirm Password</label>
+                                    <div className="input-group">
+                                        <Lock size={20} color="var(--text-secondary)" />
+                                        <input
+                                            type="password"
+                                            className="input-field"
+                                            placeholder="Retype password"
+                                            value={confirmPassword}
+                                            onChange={(e) => setConfirmPassword(e.target.value)}
                                             required
                                             minLength={6}
                                         />

@@ -5,26 +5,35 @@ import { NextResponse } from 'next/server';
 
 export async function PUT(req) {
     try {
-        const { email, code, newPassword } = await req.json();
+        const { email, code, newPassword, token, password } = await req.json();
 
-        if (!email || !code || !newPassword) {
-            return NextResponse.json({ message: "Invalid Request" }, { status: 400 });
+        // Normalize inputs: Client sends { token, password }, API originally expected { email, code, newPassword }
+        const finalCode = code || token;
+        const finalPassword = newPassword || password;
+
+        if (!finalCode || !finalPassword) {
+            return NextResponse.json({ message: "Invalid Request: Missing code or password" }, { status: 400 });
         }
 
         await connectToDatabase();
 
-        // Find user by email first, then check token matching
-        const user = await User.findOne({ email });
+        // Find user: explicitly by email if provided, otherwise by token (code)
+        let user;
+        if (email) {
+            user = await User.findOne({ email });
+        } else {
+            user = await User.findOne({ resetPasswordToken: finalCode });
+        }
 
-        console.log(`[DEBUG_RESET] Attempting reset for: ${email}`);
-        console.log(`[DEBUG_RESET] Received Code: ${code}`);
+        console.log(`[DEBUG_RESET] Attempting reset for user found via: ${email ? 'Email' : 'Token'}`);
+        console.log(`[DEBUG_RESET] Received Code: ${finalCode}`);
         console.log(`[DEBUG_RESET] Stored Token: ${user?.resetPasswordToken}`);
         console.log(`[DEBUG_RESET] Token Expire: ${user?.resetPasswordExpire} vs Now: ${Date.now()}`);
 
         // RELAXED CHECK FOR DEMO: Ignore expiration if needed, or just debug
-        if (!user || user.resetPasswordToken !== code) {
+        if (!user || user.resetPasswordToken !== finalCode) {
             console.log("[DEBUG_RESET] FAILED: Token mismatch or user not found");
-            return NextResponse.json({ message: "Invalid code" }, { status: 400 });
+            return NextResponse.json({ message: "Invalid or expired code" }, { status: 400 });
         }
 
         // if (user.resetPasswordExpire < Date.now()) {
@@ -34,7 +43,7 @@ export async function PUT(req) {
 
         // Set new password
         const salt = await bcrypt.genSalt(10);
-        user.password = await bcrypt.hash(newPassword, salt);
+        user.password = await bcrypt.hash(finalPassword, salt);
 
         user.resetPasswordToken = undefined;
         user.resetPasswordExpire = undefined;
