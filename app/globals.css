@@ -92,6 +92,86 @@ body {
   .grid-cols-3 {
     grid-template-columns: 1fr !important;
   }
+
+  /* Mobile adjustments for content with hamburger menu */
+  main {
+    margin-left: 0;
+    margin-top: 0;
+    padding-top: 20px;
+  }
+
+  /* Ensure sections have proper padding on mobile */
+  section {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+  .container {
+    padding: 0 16px;
+  }
+
+  /* Hero content mobile adjustments */
+  .hero-content {
+    padding-top: 60px !important;
+  }
+
+  .hero-title {
+    font-size: 2rem !important;
+    margin-bottom: 8px !important;
+  }
+
+  .hero-buttons {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    width: 100% !important;
+  }
+
+  .hero-badges {
+    flex-wrap: wrap !important;
+    justify-content: flex-start !important;
+    gap: 12px !important;
+  }
+
+  /* Tab styling for mobile */
+  div[style*="display: flex"][style*="gap: 8px"][style*="marginBottom: 32px"] {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 8px;
+  }
+
+  /* Ensure cards are responsive */
+  .card {
+    padding: 16px !important;
+  }
+
+  /* Grid adjustments */
+  [style*="gridTemplateColumns: repeat"] {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 640px) {
+  main {
+    padding-top: 30px;
+  }
+
+  .hero-title {
+    font-size: 1.5rem !important;
+  }
+
+  .btn {
+    padding: 8px 12px !important;
+    font-size: 0.85rem !important;
+  }
+
+  .card {
+    padding: 12px !important;
+  }
+
+  /* Hamburger menu button spacing */
+  body {
+    padding-top: 0;
+  }
 }
 
 .grid-cols-3 {

@@ -706,7 +706,7 @@ export default function TripDetails() {
                         alt="Trip Cover"
                         style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(0.6)' }}
                     />
-                    <div className="container hero-content" style={{ position: 'absolute', bottom: '32px', left: '50%', transform: 'translateX(-50%)', width: '100%' }}>
+                    <div className="container hero-content" style={{ position: 'absolute', bottom: '32px', left: '50%', transform: 'translateX(-50%)', width: '100%', paddingTop: '60px' }}>
                         <motion.h1
                             initial={{ y: 20, opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}
@@ -812,7 +812,7 @@ export default function TripDetails() {
 
                 <div className="container" style={{ marginTop: '32px' }}>
                     {/* Tabs */}
-                    <div style={{ display: 'flex', gap: '8px', marginBottom: '32px', borderBottom: '1px solid var(--border)' }}>
+                    <div style={{ display: 'flex', gap: '8px', marginBottom: '32px', borderBottom: '1px solid var(--border)', overflowX: 'auto', paddingBottom: '8px' }}>
                         {['itinerary', 'budget', 'chat'].map(tab => (
                             <button
                                 key={tab}
@@ -823,7 +823,7 @@ export default function TripDetails() {
                                     border: 'none',
                                     color: activeTab === tab ? 'var(--primary-color)' : 'var(--text-secondary)',
                                     borderBottom: activeTab === tab ? '2px solid var(--primary-color)' : '2px solid transparent',
-                                    fontWeight: '600', cursor: 'pointer', textTransform: 'capitalize'
+                                    fontWeight: '600', cursor: 'pointer', textTransform: 'capitalize', whiteSpace: 'nowrap', minWidth: 'max-content'
                                 }}
                             >
                                 {tab}
