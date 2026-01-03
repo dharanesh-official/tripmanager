@@ -36,14 +36,14 @@ export async function POST(req) {
         // Send Welcome Email
         await sendEmail({
             to: newUser.email,
-            subject: 'Welcome to GlobeTrotter!',
+            subject: 'Welcome to Tripplanner_by_KD!',
             html: `
                 <div style="font-family: sans-serif; padding: 20px; color: #333;">
-                    <h1 style="color: #2563eb;">Welcome to GlobeTrotter, ${newUser.name}! 🌍</h1>
+                    <h1 style="color: #2563eb;">Welcome to Tripplanner_by_KD, ${newUser.name}! 🌍</h1>
                     <p>We are thrilled to have you on board.</p>
                     <p>Start planning your dream journeys, collaborate with friends, and manage your trips effortlessly.</p>
                     <br/>
-                    <p>Happy Travels,<br/>The GlobeTrotter Team</p>
+                    <p>Happy Travels,<br/>The Tripplanner_by_KD Team</p>
                 </div>
             `
         });

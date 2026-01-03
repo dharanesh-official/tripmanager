@@ -49,8 +49,15 @@ export async function POST(req) {
         // Send Email
         await sendEmail({
             to: email,
-            subject: 'Verify your GlobeTrotter Account',
-            html: `<p>Your verification code is: <strong>${otp}</strong></p><p>This code expires in 5 minutes.</p>`
+            subject: 'Verify your Tripplanner_by_KD Account',
+            html: `
+                <div style="font-family: sans-serif; padding: 20px;">
+                    <h2 style="color: #2563eb;">Account Verification</h2>
+                    <p>Thank you for signing up with Tripplanner_by_KD.</p>
+                    <p>Your verification code is: <strong style="font-size: 1.25rem;">${otp}</strong></p>
+                    <p>This code expires in 5 minutes.</p>
+                </div>
+            `
         });
 
         return NextResponse.json(

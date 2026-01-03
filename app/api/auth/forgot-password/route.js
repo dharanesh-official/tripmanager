@@ -54,18 +54,19 @@ export async function POST(req) {
             });
 
             await transporter.sendMail({
-                from: `"GlobeTrotter Support" <${process.env.EMAIL_USER}>`,
+                from: `"Tripplanner_by_KD Support" <${process.env.EMAIL_USER}>`,
                 to: email,
-                subject: 'Your Password Reset Code',
+                subject: 'Password Reset Request',
                 html: `
                     <div style="font-family: Arial, sans-serif; padding: 20px; color: #333;">
-                        <h2 style="color: #3b82f6;">GlobeTrotter Password Reset</h2>
-                        <p>You requested a password reset. Use the code below to proceed:</p>
-                        <div style="background: #f3f4f6; padding: 15px; border-radius: 8px; text-align: center; margin: 20px 0;">
-                            <span style="font-size: 24px; font-weight: bold; letter-spacing: 4px; color: #1e293b;">${otp}</span>
+                        <h2 style="color: #ef4444;">Password Reset</h2>
+                        <p>We received a request to reset your password for your Tripplanner_by_KD account.</p>
+                        <p>Use the secure code below to proceed:</p>
+                        <div style="background: #fef2f2; border: 1px solid #fee2e2; padding: 15px; border-radius: 8px; text-align: center; margin: 20px 0;">
+                            <span style="font-size: 24px; font-weight: bold; letter-spacing: 4px; color: #b91c1c;">${otp}</span>
                         </div>
                         <p>This code is valid for 10 minutes.</p>
-                        <p style="color: #666; font-size: 12px; margin-top: 30px;">If you didn't request this, ignore this email.</p>
+                        <p style="color: #666; font-size: 12px; margin-top: 30px;">If you didn't request this, please ignore this email or contact support.</p>
                     </div>
                 `,
             });
